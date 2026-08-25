@@ -1,0 +1,6 @@
+com\taskflow\backend\TaskServiceTest.class
+com\taskflow\backend\AuthControllerTest.class
+com\taskflow\backend\AdminServiceTest.class
+com\taskflow\backend\SecurityAndValidationTest.class
+com\taskflow\backend\TaskflowApplicationTests.class
+com\taskflow\backend\AssignmentServiceTest.class

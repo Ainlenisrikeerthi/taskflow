@@ -1,0 +1,139 @@
+/* ── Button Base ─────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Sizes ──────────────────────────────── */
+.btn-sm {
+  padding: 7px 14px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  gap: 6px;
+}
+
+.btn-md {
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+}
+
+.btn-lg {
+  padding: 13px 26px;
+  font-size: 15px;
+  border-radius: var(--radius-lg);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ── Primary Variant (Electric Violet → Indigo) ── */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-button-primary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--gradient-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-button-primary-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-button-primary);
+}
+
+/* ── Secondary Variant ───────────────────── */
+.btn-secondary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-navy);
+  box-shadow: var(--shadow-xs), var(--shadow-inner-glow);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-surface-soft);
+  border-color: var(--color-border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ── Danger Variant ─────────────────────── */
+.btn-danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.16);
+  transform: translateY(-1px);
+}
+
+/* ── Ghost Variant ──────────────────────── */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--color-surface-soft);
+  color: var(--color-navy);
+}
+
+/* ── Loading Spinner ─────────────────────── */
+.btn-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.btn-secondary .btn-spinner,
+.btn-danger .btn-spinner,
+.btn-ghost .btn-spinner {
+  border-color: rgba(15, 23, 42, 0.2);
+  border-top-color: var(--color-navy);
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}

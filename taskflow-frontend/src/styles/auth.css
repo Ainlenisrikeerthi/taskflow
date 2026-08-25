@@ -1,0 +1,208 @@
+/* ════════════════════════════════════════════
+   TaskFlow — Auth Pages Stylesheet
+   Centered Minimal Card Layout (Reference Image 2 & 3)
+   ════════════════════════════════════════════ */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background);
+  padding: 40px 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card), var(--shadow-inner-glow);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+.auth-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-navy);
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  text-decoration: none;
+}
+
+.auth-brand-mark {
+  width: 34px;
+  height: 34px;
+  background: var(--gradient-primary);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.auth-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--color-navy);
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgot-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-electric-violet);
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Divider ────────────────────────────── */
+.auth-divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  margin: 22px 0 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* ── Google Button ──────────────────────── */
+.google-button {
+  width: 100%;
+  padding: 11px 16px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-navy);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-xs), var(--shadow-inner-glow);
+}
+
+.google-button:hover:not(:disabled) {
+  background: var(--color-surface-soft);
+  border-color: var(--color-border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+.google-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Footer Link ────────────────────────── */
+.auth-footer {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.auth-footer a {
+  color: var(--color-electric-violet);
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Alert Box ──────────────────────────── */
+.alert-box {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.alert-box.danger {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #F87171;
+}
+
+.alert-box.success {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #34D399;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 32px 24px;
+  }
+}
+
+:root[data-theme="dark"] .auth-brand-logo,
+:root[data-theme="dark"] .auth-title,
+:root[data-theme="dark"] .google-button { color: var(--color-text); }
+:root[data-theme="dark"] .alert-box.success { background: rgba(23,138,97,.14); color: #9BE2C5; border-color: rgba(52,211,153,.45); }
+:root[data-theme="dark"] .alert-box.danger { background: rgba(217,83,79,.14); color: #F7B5B1; border-color: rgba(248,113,113,.45); }
