@@ -97,7 +97,7 @@ export default function MyTasks() {
             <span style={{ fontWeight: 600, color: "var(--color-navy)" }}>My Tasks</span>
           </div>
           <h1>My Assigned Tasks</h1>
-          <p>Update your execution status and submit proof of completion.</p>
+          <p>General tasks use proof URLs. Coding tasks open a code workspace with test execution and AI scoring.</p>
         </div>
       </div>
 
@@ -146,7 +146,7 @@ export default function MyTasks() {
                 {assignments.map((ass) => (
                   <tr key={ass.id}>
                     <td data-label="Task Title" style={{ fontWeight: 700, color: "var(--color-navy)" }}>
-                      <Link to={`/user/tasks/${ass.task?.id}`} style={{ color: "var(--color-navy)", textDecoration: "none" }}>
+                      <Link to={ass.task?.taskType === "CODING" ? `/user/coding/${ass.task?.id}` : `/user/tasks/${ass.task?.id}`} style={{ color: "var(--color-navy)", textDecoration: "none" }}>
                         {ass.task?.title}
                       </Link>
                     </td>
@@ -154,45 +154,48 @@ export default function MyTasks() {
                       {ass.assignedAt ? ass.assignedAt.split("T")[0] : "—"}
                     </td>
                     <td data-label="Status">
-                      <select
-                        className="input-control"
-                        style={{ padding: "6px 12px", fontSize: 13, width: 210, cursor: "pointer" }}
-                        value={ass.status}
-                        onChange={(e) => handleStatusAndProofUpdate(ass.id, e.target.value, ass.proofUrl)}
-                      >
-                        <option value="ASSIGNED_NOT_STARTED">Assigned / Not Started</option>
-                        <option value="STARTED_NOT_COMPLETED">Started but Not Completed</option>
-                        <option value="COMPLETED">Completed</option>
-                      </select>
+                      {ass.task?.taskType === "CODING" ? (
+                        <Badge status={ass.status} />
+                      ) : (
+                        <select
+                          className="input-control"
+                          style={{ padding: "6px 12px", fontSize: 13, width: 210, cursor: "pointer" }}
+                          value={ass.status}
+                          onChange={(e) => handleStatusAndProofUpdate(ass.id, e.target.value, ass.proofUrl)}
+                        >
+                          <option value="ASSIGNED_NOT_STARTED">Assigned / Not Started</option>
+                          <option value="STARTED_NOT_COMPLETED">Started but Not Completed</option>
+                          <option value="COMPLETED">Completed</option>
+                        </select>
+                      )}
                     </td>
                     <td data-label="Proof Link">
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <input
-                          type="url"
-                          className="input-control"
-                          style={{ padding: "6px 12px", fontSize: 13, minWidth: 220 }}
-                          placeholder="Paste proof URL (e.g. GitHub link)"
-                          value={ass.proofUrl || ""}
-                          onChange={(e) => handleProofChange(ass.id, e.target.value)}
-                          onBlur={() => handleSaveProof(ass)}
-                        />
-                        {ass.proofUrl && (
-                          <a
-                            href={ass.proofUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            style={{ textDecoration: "none" }}
-                          >
-                            <Button variant="secondary" size="sm" icon={<ExternalLink size={13} />} />
-                          </a>
-                        )}
-                      </div>
+                      {ass.task?.taskType === "CODING" ? (
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--color-electric-violet)" }}>Code submission required</span>
+                      ) : (
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <input
+                            type="url"
+                            className="input-control"
+                            style={{ padding: "6px 12px", fontSize: 13, minWidth: 220 }}
+                            placeholder="Paste proof URL (e.g. GitHub link)"
+                            value={ass.proofUrl || ""}
+                            onChange={(e) => handleProofChange(ass.id, e.target.value)}
+                            onBlur={() => handleSaveProof(ass)}
+                          />
+                          {ass.proofUrl && (
+                            <a href={ass.proofUrl} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+                              <Button variant="secondary" size="sm" icon={<ExternalLink size={13} />} />
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td data-label="Actions" style={{ textAlign: "center" }}>
                       <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
-                        <Link to={`/user/tasks/${ass.task?.id}`} style={{ textDecoration: "none" }}>
+                        <Link to={ass.task?.taskType === "CODING" ? `/user/coding/${ass.task?.id}` : `/user/tasks/${ass.task?.id}`} style={{ textDecoration: "none" }}>
                           <Button variant="secondary" size="sm" icon={<Eye size={12} />}>
-                            View
+                            {ass.task?.taskType === "CODING" ? "Open Code" : "View"}
                           </Button>
                         </Link>
                         <Button

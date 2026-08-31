@@ -21,6 +21,9 @@ public class TaskRequest {
     private String proofRequirement;
 
     private String status; // "DRAFT" or "PUBLISHED"
+    private String taskType = "GENERAL";
+    private String difficulty;
+    private String starterCode;
 
     public TaskRequest() {}
 
@@ -32,6 +35,10 @@ public class TaskRequest {
         this.proofRequirement = proofRequirement;
         this.status = status;
     }
+
+    public String getTaskType(){return taskType;} public void setTaskType(String v){taskType=v;}
+    public String getDifficulty(){return difficulty;} public void setDifficulty(String v){difficulty=v;}
+    public String getStarterCode(){return starterCode;} public void setStarterCode(String v){starterCode=v;}
 
     public String getTitle() {
         return title;

@@ -31,6 +31,12 @@ public class TaskService {
     private AssignmentRepository assignmentRepository;
 
     @Autowired
+    private com.taskflow.backend.repository.CodingTestCaseRepository codingTestCaseRepository;
+
+    @Autowired
+    private com.taskflow.backend.repository.CodeSubmissionRepository codeSubmissionRepository;
+
+    @Autowired
     private NotificationService notificationService;
 
     @Transactional(readOnly = true)
@@ -65,6 +71,8 @@ public class TaskService {
         task.setInstructions(request.getInstructions());
         task.setDeadline(request.getDeadline());
         task.setProofRequirement(request.getProofRequirement());
+        try { task.setTaskType(com.taskflow.backend.model.TaskType.valueOf(request.getTaskType()==null?"GENERAL":request.getTaskType().toUpperCase())); } catch(Exception e){ task.setTaskType(com.taskflow.backend.model.TaskType.GENERAL); }
+        task.setDifficulty(request.getDifficulty()); task.setStarterCode(request.getStarterCode());
         task.setCreatedBy(admin);
 
         if (request.getStatus() != null && !request.getStatus().trim().isEmpty()) {
@@ -104,9 +112,10 @@ public class TaskService {
         if (request.getDeadline() != null) {
             task.setDeadline(request.getDeadline());
         }
-        if (request.getProofRequirement() != null) {
-            task.setProofRequirement(request.getProofRequirement());
-        }
+        if (request.getProofRequirement() != null) { task.setProofRequirement(request.getProofRequirement()); }
+        if (request.getTaskType()!=null) { try { task.setTaskType(com.taskflow.backend.model.TaskType.valueOf(request.getTaskType().toUpperCase())); } catch(Exception ignored){} }
+        if (request.getDifficulty()!=null) task.setDifficulty(request.getDifficulty());
+        if (request.getStarterCode()!=null) task.setStarterCode(request.getStarterCode());
         if (request.getStatus() != null && !request.getStatus().trim().isEmpty()) {
             try {
                 task.setStatus(TaskStatus.valueOf(request.getStatus().trim().toUpperCase()));
@@ -151,7 +160,9 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
 
-        // Safely remove associated assignments before deleting task
+        // Safely remove coding children and assignments before deleting task
+        codeSubmissionRepository.deleteByTaskId(id);
+        codingTestCaseRepository.deleteByTaskId(id);
         assignmentRepository.deleteAll(assignmentRepository.findByTaskId(id));
         taskRepository.delete(task);
     }
@@ -167,6 +178,7 @@ public class TaskService {
         response.setDeadline(task.getDeadline());
         response.setProofRequirement(task.getProofRequirement());
         response.setStatus(task.getStatus());
+        response.setTaskType(task.getTaskType()==null?"GENERAL":task.getTaskType().name()); response.setDifficulty(task.getDifficulty()); response.setStarterCode(task.getStarterCode());
         if (task.getCreatedBy() != null) {
             response.setCreatedById(task.getCreatedBy().getId());
             response.setCreatedByName(task.getCreatedBy().getName());

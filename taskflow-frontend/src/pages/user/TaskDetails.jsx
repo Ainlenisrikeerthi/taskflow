@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../../data/api";
 import { useAuth } from "../../components/common/AuthContext";
-import { Calendar, Layers, ArrowLeft, CheckCircle, AlertCircle, Trash2, ExternalLink } from "lucide-react";
+import { Calendar, Layers, ArrowLeft, CheckCircle, AlertCircle, Trash2, ExternalLink, Code2 } from "lucide-react";
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import Badge from "../../components/ui/Badge";
@@ -155,7 +155,7 @@ export default function TaskDetails() {
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: isAdmin ? "1fr" : "2fr 1fr", gap: 24, alignItems: "start" }}>
+      <div className={`task-details-grid${isAdmin ? " admin-view" : ""}`}>
         {/* Left Side: Task Specifications */}
         <div className="card" style={{ padding: "32px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
@@ -216,7 +216,21 @@ export default function TaskDetails() {
               Execution Control
             </h3>
 
-            {!assignment ? (
+            {task.taskType === "CODING" ? (
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}><Code2 size={20} /><strong>Coding submission</strong></div>
+                <p style={{ color: "var(--color-text-secondary)", fontSize: 14, lineHeight: 1.5, marginBottom: 18 }}>
+                  This coding task does not use a proof URL. Assign it, then write and run code in the coding workspace.
+                </p>
+                {!assignment ? (
+                  <Button onClick={handleAssign} variant="primary" fullWidth>Assign Coding Task</Button>
+                ) : (
+                  <Link to={`/user/coding/${task.id}`} style={{ textDecoration: "none" }}>
+                    <Button variant="primary" fullWidth>Open Coding Workspace</Button>
+                  </Link>
+                )}
+              </div>
+            ) : !assignment ? (
               <div>
                 <p style={{ color: "var(--color-text-secondary)", fontSize: 14, marginBottom: 20, lineHeight: 1.5 }}>
                   You are not currently assigned to this task. Click below to self-assign and start work.

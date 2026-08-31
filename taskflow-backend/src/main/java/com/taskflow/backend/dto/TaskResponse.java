@@ -12,6 +12,9 @@ public class TaskResponse {
     private LocalDate deadline;
     private String proofRequirement;
     private TaskStatus status;
+    private String taskType;
+    private String difficulty;
+    private String starterCode;
     private Long createdById;
     private String createdByName;
     private long assignedCount;
@@ -20,6 +23,10 @@ public class TaskResponse {
     private LocalDateTime updatedAt;
 
     public TaskResponse() {}
+
+    public String getTaskType(){return taskType;} public void setTaskType(String v){taskType=v;}
+    public String getDifficulty(){return difficulty;} public void setDifficulty(String v){difficulty=v;}
+    public String getStarterCode(){return starterCode;} public void setStarterCode(String v){starterCode=v;}
 
     public Long getId() {
         return id;

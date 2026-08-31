@@ -16,6 +16,7 @@ export default function AvailableTasks() {
 
   // Search
   const [searchTerm, setSearchTerm] = useState("");
+  const [taskFilter, setTaskFilter] = useState("all");
 
   useEffect(() => {
     fetchTasksAndAssignments();
@@ -59,10 +60,14 @@ export default function AvailableTasks() {
 
   // Filter logic
   const filteredTasks = tasks.filter((task) => {
-    return (
+    const matchesSearch =
       task.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+      task.description?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const isAssigned = activeAssignments.some((assignment) => assignment.taskId === task.id);
+    const matchesAssignmentFilter = taskFilter === "all" || !isAssigned;
+
+    return matchesSearch && matchesAssignmentFilter;
   });
 
   return (
@@ -94,15 +99,31 @@ export default function AvailableTasks() {
         </div>
       )}
 
-      {/* Search Controls */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-        <div style={{ width: 320 }}>
+      {/* Search + assignment filter */}
+      <div className="available-task-controls">
+        <div className="available-task-search">
           <Input
             prefixIcon={<Search size={16} />}
             placeholder="Search available tasks..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+        </div>
+        <div className="available-task-filters" role="group" aria-label="Available task filters">
+          <Button
+            variant={taskFilter === "all" ? "primary" : "secondary"}
+            size="sm"
+            onClick={() => setTaskFilter("all")}
+          >
+            All Tasks
+          </Button>
+          <Button
+            variant={taskFilter === "unassigned" ? "primary" : "secondary"}
+            size="sm"
+            onClick={() => setTaskFilter("unassigned")}
+          >
+            Not Assigned
+          </Button>
         </div>
       </div>
 
@@ -124,10 +145,10 @@ export default function AvailableTasks() {
             const isAssigned = !!assignment;
 
             return (
-              <div key={task.id} className="card card-hover" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <div key={task.id} className="card card-hover available-task-card">
                 <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                    <Badge variant="purple" label="Published" />
+                  <div className="available-task-card-head">
+                    <div style={{display:"flex",gap:6}}><Badge variant="purple" label="Published" />{task.taskType === "CODING" && <Badge variant="purple" label={`Coding · ${task.difficulty || "DSA"}`} />}</div>
                     <span style={{ fontSize: 13, color: "var(--color-text-secondary)", fontWeight: 500, display: "inline-flex", alignItems: "center", gap: 4 }}>
                       <Calendar size={13} /> {task.deadline || "No deadline"}
                     </span>
@@ -148,13 +169,13 @@ export default function AvailableTasks() {
                   )}
                 </div>
 
-                <div style={{ borderTop: "1px solid var(--color-border)", paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="available-task-card-footer">
                   <span style={{ fontSize: 13, color: "var(--color-text-secondary)", fontWeight: 500 }}>
                     {task.assignedCount || 0} assigned
                   </span>
 
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <Link to={`/user/tasks/${task.id}`} style={{ textDecoration: "none" }}>
+                  <div className="available-task-actions">
+                    <Link to={task.taskType === "CODING" ? `/user/coding/${task.id}` : `/user/tasks/${task.id}`} style={{ textDecoration: "none" }}>
                       <Button variant="secondary" size="sm" icon={<Eye size={13} />}>
                         View
                       </Button>

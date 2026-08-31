@@ -230,6 +230,17 @@ export const api = {
     },
   },
 
+  coding: {
+    generate: async (data) => await request("/coding/generate", { method: "POST", body: JSON.stringify(data) }),
+    saveTask: async (data) => await request("/coding/tasks", { method: "POST", body: JSON.stringify(data) }),
+    getVisibleTests: async (taskId) => await request(`/coding/tasks/${taskId}/tests`),
+    saveTests: async (taskId, tests) => await request(`/coding/tasks/${taskId}/tests`, { method: "PUT", body: JSON.stringify(tests) }),
+    run: async (taskId, language, code) => await request(`/coding/tasks/${taskId}/run`, { method: "POST", body: JSON.stringify({ language, code }) }),
+    submit: async (taskId, language, code) => await request(`/coding/tasks/${taskId}/submit`, { method: "POST", body: JSON.stringify({ language, code }) }),
+    mySubmissions: async () => await request("/coding/submissions/me"),
+    leaderboard: async (limit = 20) => await request(`/coding/leaderboard?limit=${limit}`),
+  },
+
   admin: {
     getDashboard: async () => {
       return await request("/admin/dashboard");

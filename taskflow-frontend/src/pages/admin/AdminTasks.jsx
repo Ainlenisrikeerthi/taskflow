@@ -171,9 +171,7 @@ export default function AdminTasks() {
           <h1>Manage Tasks</h1>
           <p>Create, edit, and publish tasks for team members.</p>
         </div>
-        <Button onClick={openCreateModal} variant="primary" icon={<Plus size={16} />}>
-          Create Task
-        </Button>
+        
       </div>
 
       {/* Alert Banners */}
@@ -341,7 +339,7 @@ export default function AdminTasks() {
             onChange={(e) => setInstructions(e.target.value)}
           />
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="form-two-column-grid">
             <Input
               label="Deadline"
               type="date"

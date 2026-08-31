@@ -45,9 +45,7 @@ export default function AdminDashboard() {
         </div>
         <div style={{ display: "flex", gap: 12 }}>
           <Link to="/admin/tasks" style={{ textDecoration: "none" }}>
-            <Button variant="primary" icon={<Plus size={16} />}>
-              Create Task
-            </Button>
+           
           </Link>
         </div>
       </div>

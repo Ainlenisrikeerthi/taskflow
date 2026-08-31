@@ -3,7 +3,7 @@ import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../components/common/AuthContext";
 import { useTheme } from "../components/common/ThemeContext";
 import { api } from "../data/api";
-import { LayoutDashboard,ListTodo,History,LogOut,ShieldCheck,Menu,X,ClipboardList,Layers,User,Users,ClipboardCheck,Plus,Search,Sun,Moon,Bell,CheckCheck } from "lucide-react";
+import { LayoutDashboard,ListTodo,History,LogOut,ShieldCheck,Menu,X,ClipboardList,Layers,User,Users,ClipboardCheck,Plus,Search,Sun,Moon,Bell,CheckCheck,Code2,Trophy } from "lucide-react";
 import "../styles/app.css";
 
 export default function AppLayout() {
@@ -87,7 +87,7 @@ export default function AppLayout() {
     <aside className={`app-sidebar${isMobileOpen?" sidebar-open":""}`}><div className="sidebar-inner">
       <Link to={`/${rolePath}`} className="sidebar-logo"><div className="sidebar-logo-mark">✓</div><div><div style={{lineHeight:1.2,fontWeight:800}}>TaskFlow</div><div style={{fontSize:11,fontWeight:500,color:"var(--sidebar-text)"}}>{isAdmin?"Admin Workspace":"User Portal"}</div></div></Link>
       {isAdmin && <Link to="/admin/tasks?action=new" className="sidebar-new-task-btn"><Plus size={16}/>New Task</Link>}
-      <nav className="sidebar-nav"><NavItem to={`/${rolePath}`} icon={<LayoutDashboard size={18}/>} label="Dashboard"/>{isAdmin?<><NavItem to="/admin/tasks" icon={<ListTodo size={18}/>} label="Tasks"/><NavItem to="/admin/assignments" icon={<ClipboardCheck size={18}/>} label="Assignments"/><NavItem to="/admin/users" icon={<Users size={18}/>} label="Users"/><NavItem to="/admin/profile" icon={<User size={18}/>} label="Profile"/></>:<><NavItem to="/user/tasks" icon={<Layers size={18}/>} label="Available Tasks"/><NavItem to="/user/my-tasks" icon={<ClipboardList size={18}/>} label="My Tasks"/><NavItem to="/user/history" icon={<History size={18}/>} label="Task History"/><NavItem to="/user/profile" icon={<User size={18}/>} label="Profile"/></>}</nav>
+      <nav className="sidebar-nav"><NavItem to={`/${rolePath}`} icon={<LayoutDashboard size={18}/>} label="Dashboard"/>{isAdmin?<><NavItem to="/admin/tasks" icon={<ListTodo size={18}/>} label="Tasks"/><NavItem to="/admin/assignments" icon={<ClipboardCheck size={18}/>} label="Assignments"/><NavItem to="/admin/users" icon={<Users size={18}/>} label="Users"/><NavItem to="/admin/coding-lab" icon={<Code2 size={18}/>} label="Coding Lab"/><NavItem to="/admin/profile" icon={<User size={18}/>} label="Profile"/></>:<><NavItem to="/user/tasks" icon={<Layers size={18}/>} label="Available Tasks"/><NavItem to="/user/my-tasks" icon={<ClipboardList size={18}/>} label="My Tasks"/><NavItem to="/user/history" icon={<History size={18}/>} label="Task History"/><NavItem to="/user/leaderboard" icon={<Trophy size={18}/>} label="Leaderboard"/><NavItem to="/user/profile" icon={<User size={18}/>} label="Profile"/></>}</nav>
       <div className="sidebar-user"><div className="sidebar-user-info"><div className="avatar avatar-sm">{initials}</div><div style={{minWidth:0,flex:1}}><div className="sidebar-user-name">{currentUser?.name??"User"}</div><div className={`sidebar-user-role${isAdmin?" admin-role":""}`}>{isAdmin?<><ShieldCheck size={12}/>Admin</>:"User Member"}</div></div></div><button onClick={handleLogout} className="sidebar-logout"><LogOut size={16}/>Sign Out</button></div>
     </div></aside>
     <main className="content-area"><header className="app-top-header">

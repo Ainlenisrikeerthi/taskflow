@@ -16,6 +16,8 @@ import TaskDetails from "../pages/user/TaskDetails";
 import MyTasks from "../pages/user/MyTasks";
 import UserHistory from "../pages/user/UserHistory";
 import UserProfile from "../pages/user/UserProfile";
+import CodingWorkspace from "../pages/user/CodingWorkspace";
+import Leaderboard from "../pages/user/Leaderboard";
 
 // Admin pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -25,6 +27,7 @@ import AdminUsers from "../pages/admin/AdminUsers";
 import UserActivity from "../pages/admin/UserActivity";
 import AdminProfile from "../pages/admin/AdminProfile";
 import AdminTaskDiscussion from "../pages/admin/AdminTaskDiscussion";
+import AdminCodingLab from "../pages/admin/AdminCodingLab";
 
 import ProtectedRoute from "../components/common/ProtectedRoute";
 
@@ -54,6 +57,8 @@ export default function AppRoutes() {
         <Route path="/user/my-tasks" element={<MyTasks />} />
         <Route path="/user/history" element={<UserHistory />} />
         <Route path="/user/profile" style={{ flex: 1 }} element={<UserProfile />} />
+        <Route path="/user/coding/:id" element={<CodingWorkspace />} />
+        <Route path="/user/leaderboard" element={<Leaderboard />} />
       </Route>
 
       {/* Admin Dashboard - Protected */}
@@ -72,6 +77,7 @@ export default function AppRoutes() {
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/users/:id" element={<UserActivity />} />
         <Route path="/admin/profile" element={<AdminProfile />} />
+        <Route path="/admin/coding-lab" element={<AdminCodingLab />} />
       </Route>
 
       <Route

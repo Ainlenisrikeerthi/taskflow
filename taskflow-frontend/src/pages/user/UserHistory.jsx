@@ -7,6 +7,7 @@ import Badge from "../../components/ui/Badge";
 
 export default function UserHistory() {
   const [history, setHistory] = useState([]);
+  const [codingScores, setCodingScores] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
@@ -20,8 +21,23 @@ export default function UserHistory() {
   async function fetchHistory() {
     setIsLoading(true);
     try {
-      const res = await api.assignments.getMyAll();
+      const [res, submissions] = await Promise.all([
+        api.assignments.getMyAll(),
+        api.coding.mySubmissions().catch(() => []),
+      ]);
       setHistory(res);
+
+      // Keep the best score per coding task so marks remain visible in history.
+      const bestByTask = {};
+      (submissions || []).forEach((submission) => {
+        const taskId = Number(submission.taskId);
+        if (!taskId) return;
+        const current = bestByTask[taskId];
+        if (!current || Number(submission.score || 0) > Number(current.score || 0)) {
+          bestByTask[taskId] = submission;
+        }
+      });
+      setCodingScores(bestByTask);
     } catch (err) {
       console.error("Failed to load task history", err);
     } finally {
@@ -71,8 +87,8 @@ export default function UserHistory() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-        <div style={{ display: "flex", gap: 6 }}>
+      <div className="history-controls">
+        <div className="history-filter-buttons">
           <Button 
             onClick={() => { setFilter("all"); setCurrentPage(1); }} 
             variant={filter === "all" ? "primary" : "secondary"}
@@ -103,7 +119,7 @@ export default function UserHistory() {
           </Button>
         </div>
 
-        <div style={{ width: 280 }}>
+        <div className="history-search">
           <Input
             prefixIcon={<Search size={16} />}
             placeholder="Search by task title..."
@@ -132,7 +148,7 @@ export default function UserHistory() {
                     <th>Task Name</th>
                     <th>Assigned Date</th>
                     <th>Completion Date</th>
-                    <th>Submitted Proof</th>
+                    <th>Submission / Score</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -148,8 +164,17 @@ export default function UserHistory() {
                       <td data-label="Completion Date" style={{ color: "var(--color-text-secondary)", fontSize: 13 }}>
                         {item.status === "COMPLETED" ? formatDate(item.submittedAt) : "—"}
                       </td>
-                      <td data-label="Submitted Proof">
-                        {item.proofUrl ? (
+                      <td data-label="Submission / Score">
+                        {item.task?.taskType === "CODING" ? (
+                          codingScores[item.taskId || item.task?.id] ? (
+                            <div className="history-code-score">
+                              <strong>{Number(codingScores[item.taskId || item.task?.id].score || 0).toFixed(1)} / 5</strong>
+                              <span>Best coding score</span>
+                            </div>
+                          ) : (
+                            <span style={{ color: "var(--color-text-muted)", fontSize: 13 }}>No score recorded</span>
+                          )
+                        ) : item.proofUrl ? (
                           <a 
                             href={item.proofUrl} 
                             target="_blank" 

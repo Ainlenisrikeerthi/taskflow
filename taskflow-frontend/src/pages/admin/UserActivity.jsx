@@ -114,7 +114,7 @@ export default function UserActivity() {
       )}
 
       {/* User Summary Card */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 24, alignItems: "start", marginBottom: 32 }}>
+      <div className="user-activity-summary-grid">
         <div className="card" style={{ padding: "28px", textAlign: "center" }}>
           <div
             style={{

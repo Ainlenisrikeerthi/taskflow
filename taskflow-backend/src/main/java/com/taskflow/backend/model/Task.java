@@ -29,6 +29,15 @@ public class Task {
     private String proofRequirement;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "task_type")
+    private TaskType taskType = TaskType.GENERAL;
+
+    private String difficulty;
+
+    @Column(name="starter_code", columnDefinition="TEXT")
+    private String starterCode;
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TaskStatus status = TaskStatus.DRAFT;
 
@@ -105,6 +114,13 @@ public class Task {
     public void setProofRequirement(String proofRequirement) {
         this.proofRequirement = proofRequirement;
     }
+
+    public TaskType getTaskType() { return taskType; }
+    public void setTaskType(TaskType taskType) { this.taskType = taskType; }
+    public String getDifficulty() { return difficulty; }
+    public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
+    public String getStarterCode() { return starterCode; }
+    public void setStarterCode(String starterCode) { this.starterCode = starterCode; }
 
     public TaskStatus getStatus() {
         return status;

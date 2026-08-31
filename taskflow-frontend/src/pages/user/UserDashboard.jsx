@@ -101,7 +101,7 @@ export default function UserDashboard() {
           </div>
 
           {/* Two Column Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(420px, 1fr))", gap: 24, marginTop: 32 }}>
+          <div className="dashboard-columns">
             {/* Left column: My Active Tasks */}
             <div className="card" style={{ padding: "28px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
