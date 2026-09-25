@@ -27,6 +27,7 @@ media/
 
 # Environment variables (keep .env.example, ignore .env)
 taskflow-backend/.env
+taskflow-frontend/.env
 
 # ============================================================
 # Node / React Frontend
