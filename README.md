@@ -1,6 +1,6 @@
-﻿# 📋 TaskFlow — Task Assignment & Tracking Platform
+# 📋 TaskFlow — Task Assignment & Tracking Platform
 
-A full-stack Task Management System built with **Spring Boot** (backend) and **React/Vite** (frontend).  
+A full-stack Task Management System built with **Python Django** (backend) and **React/Vite** (frontend).  
 Supports Admin and User roles with JWT authentication, Google OAuth, email notifications, and Supabase PostgreSQL.
 
 ---
@@ -9,8 +9,8 @@ Supports Admin and User roles with JWT authentication, Google OAuth, email notif
 
 ```
 taskflow/
-├── taskflow-backend/     ← Spring Boot 3 REST API (Java 25)
-└── taskflow-frontend/    ← React 18 + Vite frontend
+├── taskflow-backend/    ← Python Django REST API
+└── taskflow-frontend/   ← React 18 + Vite frontend
 ```
 
 ---
@@ -31,14 +31,16 @@ taskflow/
 | Update Status (In Progress / Completed) | ❌ | ✅ |
 | Submit Proof URL (LinkedIn / GitHub) | ❌ | ✅ |
 | View Full Assignment History | ❌ | ✅ |
+| In-App Notifications (SSE) | ✅ | ✅ |
+| Task Discussion Comments | ✅ | ✅ |
+| Coding Lab (DSA Tasks + AI Evaluation) | ✅ | ✅ |
 
 ---
 
 ## 🛠️ Prerequisites
 
-- **Java 25** (already installed)
+- **Python 3.10+**
 - **Node.js 18+**
-- **Gradle** (project uses gradlew — no install needed)
 - **Supabase** project with PostgreSQL enabled
 
 ---
@@ -58,68 +60,70 @@ taskflow/
 ### Step 3 — Get Connection Details
 In Supabase: **Project Settings → Database**
 
-`
+```
 Host:     db.<your-project-ref>.supabase.co
 Port:     5432
 Database: postgres
 Username: postgres
 Password: <your-database-password>
-`
+```
 
 ---
 
-## ⚙️ Backend Setup
+## ⚙️ Backend Setup (Django)
 
-`powershell
-cd taskflow\taskflow-backend
-`
+### 1. Navigate to the Backend
+```powershell
+cd taskflow-backend
+```
 
-### Set Environment Variables (PowerShell)
+### 2. Install Dependencies
+```powershell
+python -m pip install -r requirements.txt
+```
 
-`powershell
-     = "db.<your-project-ref>.supabase.co"
-     = "5432"
-     = "postgres"
-     = "postgres"
- = "<your-supabase-db-password>"
-  = "407f3498b3c292160d5b7a0f612803b9b4a1b023e32906b3a0e5b72183c27183"
+### 3. Configure Environment
+Copy `.env.example` to `.env` and fill in your Supabase credentials:
+```powershell
+copy .env.example .env
+# Then edit .env with your DB_URL, DB_USERNAME, DB_PASSWORD, JWT_SECRET, EMAIL_PASSWORD, etc.
+```
 
-# Optional — email notifications
- = "smtp.gmail.com"
- = "587"
- = "your-gmail@gmail.com"
- = "your-gmail-app-password"
-`
+### 4. Verify Configuration
+```powershell
+python manage.py check
+```
 
-### Start the Backend
+### 5. Start the Backend
+```powershell
+python manage.py runserver 8080
+```
+Or double-click `run-backend.bat`.
 
-`powershell
-.\gradlew.bat bootRun
-`
+> **Runs on http://localhost:8080**
 
-Runs on **http://localhost:8080**
-
-> NOTE: If email is not configured, assignment removal notifications are printed to console instead.
+### Optional — Deadline Reminder Job
+```powershell
+python manage.py check_deadlines
+```
 
 ---
 
 ## 🎨 Frontend Setup
 
-`powershell
-cd taskflow\taskflow-frontend
+```powershell
+cd taskflow-frontend
 npm install
 npm run dev
-`
+```
 
 Runs on **http://localhost:5173**
-
-> The frontend has a **smart fallback**: if the Spring Boot backend is offline, it uses a localStorage mock database automatically.
 
 ---
 
 ## 🔐 Default Login Credentials
 
-Seeded by supabase_schema.sql:
+Seeded by `supabase_schema.sql`:
 
 | Role  | Email                 | Password    |
 |-------|-----------------------|-------------|
@@ -139,26 +143,56 @@ Seeded by supabase_schema.sql:
 | POST | /api/auth/login | Email + password login |
 | POST | /api/auth/register | Register new user |
 | POST | /api/auth/google | Google OAuth login/register |
+| POST | /api/auth/forgot-password | Send reset email |
+| POST | /api/auth/reset-password | Reset with token |
 
 ### Tasks
 | Method | URL | Role | Description |
 |--------|-----|------|-------------|
 | GET | /api/tasks | USER | Get published tasks |
+| GET | /api/tasks/{id} | USER | Get task detail |
 | GET | /api/admin/tasks | ADMIN | Get all tasks |
 | POST | /api/admin/tasks | ADMIN | Create task |
 | PUT | /api/admin/tasks/{id} | ADMIN | Edit task |
 | DELETE | /api/admin/tasks/{id} | ADMIN | Delete task |
+| POST | /api/tasks/{id}/publish | ADMIN | Publish/unpublish task |
 
 ### Assignments
 | Method | URL | Role | Description |
 |--------|-----|------|-------------|
 | GET | /api/assignments/my | USER | My active assignments |
 | GET | /api/assignments/my/all | USER | Full assignment history |
-| POST | /api/assignments/assign?taskId={id} | USER | Self-assign |
-| POST | /api/assignments/unassign/{id} | USER | Self-unassign |
-| PUT | /api/assignments/update | USER | Update status/proof URL |
-| GET | /api/admin/assignments | ADMIN | All assignments with filters |
-| POST | /api/admin/assignments/{id}/remove | ADMIN | Remove + email notification |
+| POST | /api/tasks/{id}/assign | USER | Self-assign |
+| DELETE | /api/tasks/{id}/assignment | USER | Self-unassign |
+| PATCH | /api/assignments/{id}/status | USER | Update status/proof URL |
+| GET | /api/admin/assignments | ADMIN | All assignments |
+| DELETE | /api/admin/assignments/{id} | ADMIN | Remove + email notification |
+
+### Notifications
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | /api/notifications | Get my notifications |
+| GET | /api/notifications/stream | SSE live stream |
+| PATCH | /api/notifications/{id}/read | Mark one as read |
+| PATCH | /api/notifications/read-all | Mark all as read |
+
+### Task Comments
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | /api/tasks/{id}/comments | Get comments |
+| POST | /api/tasks/{id}/comments | Post comment |
+| DELETE | /api/tasks/{id}/comments/{cid} | Delete comment |
+
+### Coding Lab
+| Method | URL | Description |
+|--------|-----|-------------|
+| POST | /api/coding/generate | AI-generate coding task |
+| POST | /api/coding/tasks | Save coding task |
+| GET | /api/coding/tasks/{id}/tests | Get visible test cases |
+| POST | /api/coding/tasks/{id}/run | Run code against tests |
+| POST | /api/coding/tasks/{id}/submit | Submit + AI evaluation |
+| GET | /api/coding/submissions/me | My submissions |
+| GET | /api/coding/leaderboard | Leaderboard |
 
 ---
 
@@ -166,23 +200,23 @@ Seeded by supabase_schema.sql:
 
 1. Go to Google Cloud Console → APIs & Services → Credentials
 2. Create OAuth 2.0 Client ID (Web app)
-3. Add http://localhost:5173 to Authorized JavaScript origins
-4. Copy your Client ID into Login.jsx (replace the GOOGLE_CLIENT_ID placeholder)
+3. Add `http://localhost:5173` to Authorized JavaScript origins
+4. Copy your Client ID into `Login.jsx` (replace the `GOOGLE_CLIENT_ID` placeholder)
 
 ---
 
-## 🏗️ Production Build
+## 🏗️ Production Deployment
 
-### Backend JAR:
-`powershell
-.\gradlew.bat build
-java -jar build\libs\taskflow-backend-0.0.1-SNAPSHOT.jar
-`
+### Backend (Gunicorn):
+```bash
+pip install gunicorn
+gunicorn taskflow_project.wsgi:application --bind 0.0.0.0:8080
+```
 
 ### Frontend Static:
-`powershell
+```powershell
 npm run build   # output in dist/ — deploy to Netlify/Vercel
-`
+```
 
 ---
 
@@ -192,43 +226,19 @@ npm run build   # output in dist/ — deploy to Netlify/Vercel
 |-------|-----------|
 | Frontend | React 18, Vite, React Router v6, Lucide Icons |
 | Styling | Vanilla CSS, CSS variables, glassmorphism |
-| Backend | Spring Boot 3.4, Spring Security, Spring Data JPA |
-| Auth | JWT (JJWT 0.12.5), Google OAuth |
+| Backend | Python 3.12, Django 5, Django REST Framework |
+| Auth | JWT (PyJWT), BCrypt, Google OAuth |
 | Database | PostgreSQL via Supabase |
-| Email | Spring Mail / JavaMailSender |
-| Build | Gradle (backend), npm (frontend) |
+| Email | Django SMTP / Gmail App Password |
+| AI | OpenRouter API (code evaluation & generation) |
+| Code Runner | Local Java/Python subprocess execution |
 
 ---
 
 ## 🐛 Troubleshooting
 
-- **Backend won't start?** → Check DB env vars, ensure Supabase project is active (not paused)
-- **Frontend shows mock data?** → Start the backend first, then refresh
-- **CORS errors?** → Backend allows ports 5173, 5174, 3000. Add yours in SecurityConfig.java
-- **Email not sending?** → Use a Gmail App Password (not regular password). See: Google Account → Security → App Passwords
-
-## Communication features added
-
-This updated build includes:
-
-- Persistent in-app notifications with a live SSE stream and unread/read state.
-- Task discussion threads for users and administrators.
-- Automatic deadline reminders using Spring Scheduler (due tomorrow and overdue), with in-app notifications and email attempts.
-
-### New backend APIs
-
-- `GET /api/notifications`
-- `GET /api/notifications/stream` (SSE)
-- `PATCH /api/notifications/{id}/read`
-- `PATCH /api/notifications/read-all`
-- `GET /api/tasks/{taskId}/comments`
-- `POST /api/tasks/{taskId}/comments`
-- `DELETE /api/tasks/{taskId}/comments/{commentId}`
-
-### Database
-
-With `spring.jpa.hibernate.ddl-auto=update`, Hibernate creates the new `notifications` and `task_comments` tables automatically. For an explicit Supabase migration, run `taskflow-backend/new_features_migration.sql` once.
-
-### Deadline schedule
-
-Default reminder job: every day at 08:00 server local time. Override it with `TASKFLOW_REMINDER_CRON`.
+- **Backend won't start?** → Run `python manage.py check`, verify `.env` has correct DB credentials
+- **Supabase connection refused?** → Ensure your Supabase project is active (not paused on free tier)
+- **CORS errors?** → Backend allows all origins in dev (`CORS_ALLOW_ALL_ORIGINS = True`)
+- **Email not sending?** → Use a Gmail App Password (not regular password). Google Account → Security → App Passwords
+- **JWT errors?** → Ensure `JWT_SECRET` in `.env` matches what was used to sign existing tokens

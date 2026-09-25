@@ -1,1 +1,47 @@
-taskflow-backend/target/
+# ============================================================
+# Python / Django Backend
+# ============================================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+env/
+venv/
+.venv/
+pip-wheel-metadata/
+*.pyc
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Environment variables (keep .env.example, ignore .env)
+taskflow-backend/.env
+
+# ============================================================
+# Node / React Frontend
+# ============================================================
+taskflow-frontend/node_modules/
+taskflow-frontend/.env.local
+taskflow-frontend/dist/
+taskflow-frontend/build/
+
+# ============================================================
+# OS / Editor
+# ============================================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
